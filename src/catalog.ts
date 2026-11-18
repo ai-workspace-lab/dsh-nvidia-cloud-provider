@@ -104,9 +104,18 @@ function capabilitiesByModel(tags: TagsPayload | undefined): Map<string, Set<str
   return out
 }
 
-function isGenerativeChatModel(id: string): boolean {
+export function isGenerativeChatModel(id: string): boolean {
   const lower = id.toLowerCase()
-  if (lower.includes('embed') || lower.includes('rerank') || lower.includes('reward') || lower.includes('detector')) {
+  if (
+    lower.includes('embed')
+    || lower.includes('rerank')
+    || lower.includes('reward')
+    || lower.includes('detector')
+    || lower.includes('nvclip')
+    || lower.includes('nemoguard')
+    || lower.includes('safety-guard')
+    || lower.includes('content-safety')
+  ) {
     return false
   }
   return true
@@ -175,7 +184,8 @@ function adoptLive(models: readonly LiveModel[], tags: TagsPayload | undefined, 
   const caps = capabilitiesByModel(tags)
   const ids: string[] = []
   for (const entry of models) {
-    const meta = metaFromLive(entry, caps.get(str(entry.slug) ?? ''))
+    const modelId = str(entry.id) ?? str(entry.slug) ?? ''
+    const meta = metaFromLive(entry, caps.get(modelId))
     if (meta.id === '') continue
     liveMeta.set(liveKey(base, meta.id), meta)
     ids.push(meta.id)

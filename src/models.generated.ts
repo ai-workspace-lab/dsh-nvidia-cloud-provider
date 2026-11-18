@@ -171,6 +171,31 @@ export const GENERATED_MODELS: Record<string, NvidiaCloudModelMeta> = {
       "cacheRead": 0
     }
   },
+  "moonshotai/kimi-k3.1-pro": {
+    "id": "moonshotai/kimi-k3.1-pro",
+    "name": "moonshotai/kimi-k3.1-pro",
+    "transport": "openai-chat",
+    "contextWindow": 1048576,
+    "maxTokens": 16384,
+    "input": [
+      "text",
+      "image"
+    ],
+    "reasoning": [
+      "low",
+      "medium",
+      "high"
+    ],
+    "reasoningToggle": true,
+    "tools": true,
+    "free": true,
+    "available": true,
+    "cost": {
+      "input": 0,
+      "output": 0,
+      "cacheRead": 0
+    }
+  },
   "nvidia/ai-synthetic-video-detector": {
     "id": "nvidia/ai-synthetic-video-detector",
     "name": "nvidia/ai-synthetic-video-detector",
