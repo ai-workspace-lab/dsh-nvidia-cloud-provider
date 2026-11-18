@@ -30,7 +30,22 @@ function parseErrorBody(text: string): ProviderErrorBody {
   }
 }
 
-function retryAfterMs(headers: Headers): number | undefined {
+export function retryAfterMs(headers: Headers): number | undefined {
+  const reset = headers.get('x-ratelimit-reset')
+    ?? headers.get('x-ratelimit-reset-requests')
+    ?? headers.get('x-ratelimit-reset-tokens')
+  if (reset !== null && reset.trim() !== '') {
+    const seconds = Number(reset)
+    if (Number.isFinite(seconds) && seconds >= 0) {
+      // If it looks like epoch seconds (e.g. > 1_000_000_000), calculate delta
+      if (seconds > 1_000_000_000) {
+        return Math.max(0, Math.trunc(seconds * 1000 - Date.now()))
+      }
+      return Math.trunc(seconds * 1000)
+    }
+    const at = Date.parse(reset)
+    if (Number.isFinite(at)) return Math.max(0, at - Date.now())
+  }
   const raw = headers.get('retry-after')
   if (raw === null || raw.trim() === '') return undefined
   const seconds = Number(raw)

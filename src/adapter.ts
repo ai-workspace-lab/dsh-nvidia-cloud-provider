@@ -32,7 +32,7 @@ import {
 } from './catalog.ts'
 import type { ResolvedConfig } from './config.ts'
 import type { KeyResolver, ResolvedKey } from './credentials.ts'
-import { classifyResponseError } from './errors.ts'
+import { classifyResponseError, retryAfterMs } from './errors.ts'
 import { effectiveNumCtx } from './context-override.ts'
 import { hasImages, resolveImages, type ImageMap } from './images.ts'
 import { buildChatBody, buildNativeBody } from './messages.ts'
@@ -723,17 +723,17 @@ export class OllamaCloudAdapter extends LlmAdapter {
     let delayMs = 30_000
     let reason = 'transport'
     if (code === 'QUOTA' || status === 402) {
-      const seconds = Number(headers?.get('retry-after') ?? Number.NaN)
-      delayMs = Number.isFinite(seconds) && seconds > 0 ? seconds * 1000 : 10 * 60 * 1000
+      const wait = headers === undefined ? undefined : retryAfterMs(headers)
+      delayMs = wait !== undefined && wait > 0 ? wait : 10 * 60 * 1000
       reason = 'quota'
     } else if (status === 401 || status === 403) {
-      // 5 minutes (not 24h) so transient proxy, credential refresh, or local Ollama errors
+      // 5 minutes (not 24h) so transient proxy, credential refresh, or local errors
       // do not permanently disable the provider for an entire day.
       delayMs = 5 * 60 * 1000
       reason = 'invalid-credential'
     } else if (status === 429) {
-      const seconds = Number(headers?.get('retry-after') ?? Number.NaN)
-      delayMs = Number.isFinite(seconds) && seconds > 0 ? seconds * 1000 : 60_000
+      const wait = headers === undefined ? undefined : retryAfterMs(headers)
+      delayMs = wait !== undefined && wait > 0 ? wait : 60_000
       reason = 'rate-limit'
     }
     this.cooldowns.set(this.keyId(key), { until: Date.now() + delayMs, reason })

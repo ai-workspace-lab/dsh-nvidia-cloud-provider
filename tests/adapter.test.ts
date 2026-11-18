@@ -427,6 +427,30 @@ test('401/403 cools for 5 minutes and surfaces INVALID_CREDENTIAL when all accou
   })
 })
 
+test('429 rate limit cools for 60s or respects retry-after/x-ratelimit-reset', async () => {
+  const fetchImpl = (async () => new Response(JSON.stringify({ error: 'rate limited' }), {
+    status: 429,
+    headers: {
+      'content-type': 'application/json',
+      'x-ratelimit-reset': '60',
+    },
+  })) as typeof fetch
+  const adapter = new OllamaCloudAdapter({
+    config: () => resolveConfig({ apiKey: 'k' }),
+    resolveKey: async () => ({ key: 'rate-limited-key', source: 'test' }),
+    fetchImpl,
+    ...paths(),
+  })
+  await assert.rejects(async () => {
+    for await (const _chunk of adapter.stream(options)) {}
+  })
+  const health = adapter.accountHealth('rate-limited-key')
+  assert.ok(health !== undefined)
+  assert.equal(health.reason, 'rate-limit')
+  const cooldownDuration = health.coolingUntil - Date.now()
+  assert.ok(cooldownDuration > 55 * 1000 && cooldownDuration <= 61 * 1000)
+})
+
 test('clearCooldowns resets in-memory health and writes empty cooldown state atomically', async () => {
   const p = paths()
   const fetchImpl = (async () => new Response(JSON.stringify({ error: 'unauthorized' }), {

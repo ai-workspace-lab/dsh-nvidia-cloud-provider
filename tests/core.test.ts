@@ -221,6 +221,9 @@ test('HTTP failures map to the harness taxonomy', () => {
   const limited = classifyResponseError(429, '{"error":"slow down"}', new Headers({ 'retry-after': '12' }))
   assert.equal(limited.code, 'RATE_LIMIT')
   assert.equal((limited.failure as { providerRetryAfterMs?: number }).providerRetryAfterMs, 12_000)
+  const rateLimitHeader = classifyResponseError(429, '{"error":"rate limit"}', new Headers({ 'x-ratelimit-reset': '60' }))
+  assert.equal(rateLimitHeader.code, 'RATE_LIMIT')
+  assert.equal((rateLimitHeader.failure as { providerRetryAfterMs?: number }).providerRetryAfterMs, 60_000)
   assert.equal(
     classifyResponseError(400, '{"error":"context length exceeded"}', headers).code,
     CONTEXT_WINDOW_EXCEEDED_CODE,
