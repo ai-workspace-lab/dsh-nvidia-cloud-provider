@@ -56,7 +56,13 @@ Add to your `cordis.patch.yml`:
 1. Open DeepSeek Harness **Settings → NVIDIA NIM**.
 2. Paste your API key from [build.nvidia.com](https://build.nvidia.com) (starts with `nvapi-`).
 3. Click **Save key** and **Test connection**.
-4. Select any NIM model (e.g., `deepseek-ai/deepseek-v4.1-flash`, `mistralai/mistral-large-4-1t-a52b`) in the chat model picker.
+4. Select any NIM model (e.g., `google/gemma-4-31b-it`, `mistralai/mistral-large-4-1t-a52b`) in the chat model picker.
+
+## Visual Verification
+
+NVIDIA NIM settings page in DeepSeek Harness Desktop (running alongside Ollama Cloud without collision):
+
+![NVIDIA NIM settings](media/visual-verification.png)
 
 ## License
 

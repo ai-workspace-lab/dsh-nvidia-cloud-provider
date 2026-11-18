@@ -26,6 +26,7 @@
     "CHANGELOG.md",
     "LICENSE",
     "NOTICE",
+    "screenshots.json",
     "media/visual-verification.png"
   ],
   "publishConfig": {

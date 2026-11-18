@@ -58,7 +58,13 @@ dsh plugin add github:ai-workspace-lab/dsh-nvidia-cloud-provider
 1. 打开 DeepSeek Harness **设置 → NVIDIA NIM**。
 2. 粘贴在 [build.nvidia.com](https://build.nvidia.com) 领取的 API Key（格式为 `nvapi-...`）。
 3. 点击 **保存密钥**，然后点击 **测试连接**。
-4. 在对话输入框上方的模型切换面板中选择任意 NVIDIA NIM 模型（如 `deepseek-ai/deepseek-v4.1-flash`、`mistralai/mistral-large-4-1t-a52b` 等）即可开始对话！
+4. 在对话输入框上方的模型切换面板中选择任意 NVIDIA NIM 模型（如 `google/gemma-4-31b-it`、`mistralai/mistral-large-4-1t-a52b` 等）即可开始对话！
+
+## 界面预览
+
+DeepSeek Harness 桌面端中的 NVIDIA NIM 设置面板（与 Ollama Cloud 完全隔离并存）：
+
+![NVIDIA NIM 设置面板](media/visual-verification.png)
 
 ## 开源许可证
 

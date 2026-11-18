@@ -1,15 +1,17 @@
-dsh-ollama-cloud-provider
-Copyright (c) 2026 GooDAnDReaDY
+@ai-workspace-lab/dsh-nvidia-cloud-provider
+Copyright (c) 2026 ai-workspace-lab contributors
 
 This product is MIT-licensed (see LICENSE).
 
-Third-party references and attribution:
+Third-party references and upstream attribution:
 
+- Adapted for NVIDIA NIM (`build.nvidia.com` / `https://integrate.api.nvidia.com/v1`) from
+  `@goodandready/dsh-ollama-cloud-provider` (MIT, Copyright (c) 2026 GooDAnDReaDY), with isolated
+  provider IDs (`nvidia-nim`), routes (`/dsh-nvidia/*`), storage (`storages/dsh-nvidia`), and
+  settings namespace (`llm-nvidia-nim`) so both plugins coexist cleanly.
 - The plugin structure, cordis lifecycle wiring, HTTP route guards, request log, analytics reader,
-  quota runway and generic client widgets were adapted from the author's own
-  `@goodandready/dsh-opencode-provider` (MIT).
-- The feature set was informed by `@goodandready/dsh-clinebot` (MIT) and
-  `@mars-sea/dsh-commandcode-provider` (MIT). No vendor code from those packages is bundled.
+  quota runway and generic client widgets originated from `@goodandready/dsh-opencode-provider` (MIT).
 - DeepSeek Harness packages (`@deepseek-ai/*`) are host-owned peer dependencies and are not bundled.
-- Ollama Cloud API facts were verified against the public documentation and live endpoints on
-  2026-10-21. Ollama is a trademark of its respective owner; this plugin is unofficial.
+- NVIDIA NIM OpenAI-compatible API behavior was verified against live `integrate.api.nvidia.com/v1/models`
+  and `integrate.api.nvidia.com/v1/chat/completions` endpoints. NVIDIA and NVIDIA NIM are trademarks of
+  NVIDIA Corporation; this plugin is unofficial.

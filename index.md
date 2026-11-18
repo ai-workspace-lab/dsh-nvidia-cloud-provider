@@ -1,46 +1,33 @@
-# index.md — @goodandready/dsh-ollama-cloud-provider
+# index.md — @ai-workspace-lab/dsh-nvidia-cloud-provider
 
-Краткая навигационная карта проекта для разработчиков и агентов.
+Quick navigation map for developers and agents.
 
-## Назначение и текущий статус
-- **Назначение**: Cordis-плагин LLM-провайдера Ollama Cloud для DeepSeek Harness.
-- **Пакет**: `@goodandready/dsh-ollama-cloud-provider` (лицензия MIT).
-- **Текущий статус**: `active` (версия 0.1.39).
-- **Размещение**:
-  - DEV: `/mnt/external/Project/DEV/dhsplugins/dsh-ollama-cloud-provider`
-  - Web Profile: `/home/vadim/.dsh/profiles/web`
-  - Desktop Profile: `C:\Users\vadim\.dsh\profiles\desktop`
+## Purpose & Status
+- **Purpose**: Cordis LLM provider plugin connecting DeepSeek Harness to NVIDIA NIM (`https://integrate.api.nvidia.com/v1`).
+- **Package**: `@ai-workspace-lab/dsh-nvidia-cloud-provider` (MIT License).
+- **Status**: `active` (`0.1.39`).
 
-## Пользовательские и системные Entry Points
-- Серверная часть: `src/index.ts` -> компилируется в `lib/index.js` (модульный ESM).
-- Клиентская часть: `src/client/index.tsx` -> компилируется в `lib/client.js` (CJS бандл для DSH ModuleLoader).
-- Маршруты API: `src/routes.ts` (`/dsh-ollama/health`, `/status`, `/state`, `/config`, `/update`, `/cooldowns/reset`).
+## Entry Points & Routes
+- Server entry: `src/index.ts` -> compiled to `lib/index.js` (unbundled ESM).
+- Client entry: `src/client/index.tsx` -> compiled to `lib/client.js` (CJS bundle for DSH `window.__ModuleLoader__`).
+- API routes: `src/routes.ts` (`/dsh-nvidia/health`, `/status`, `/state`, `/config`, `/update`, `/cooldowns/reset`, `/test`, `/refresh`, `/models/discover`).
 
-## Основные компоненты
-- `src/adapter.ts`: Реализация `LlmAdapter` с ротацией аккаунтов, кулдаунами и стримингом.
+## Core Components
+- `src/adapter.ts`: `LlmAdapter` implementation with multi-account rotation, cooldowns, and streaming.
 - `src/transports/`:
-  - `native.ts`: Транспорт родного API `/api/chat` Ollama Cloud (NDJSON).
-  - `openai-chat.ts`: OpenAI-совместимый транспорт `/v1/chat/completions` (SSE).
-  - `tool-call-id.ts`: Генерация глобально уникальных ID тул-коллов (`call_${uuid}`).
-- `src/catalog.ts`: Автоматический опрос, кэширование и фильтрация каталога моделей.
-- `src/usage.ts`: Чтение и нормализация баланса (`/api/balance`) и расхода (`/api/usage`).
-- `src/client/`: React-компоненты карточки настроек, квоты, аналитики и обновлений.
+  - `openai-chat.ts`: Primary OpenAI-compatible transport `/v1/chat/completions` (SSE).
+  - `native.ts`: Native transport fallback `/api/chat` (NDJSON).
+  - `tool-call-id.ts`: Unique tool call ID generation (`call_${uuid}`).
+- `src/catalog.ts`: Dynamic catalog discovery, caching, and non-chat model filtering (`isGenerativeChatModel`).
+- `src/usage.ts`: Usage/balance reader with fail-open handling for inference-only gateways.
+- `src/client/`: React settings page, provider card, sidebar quota card, and updater components.
 
-## Проверенные npm-скрипты
-1. `npm run build` — сборка проекта через `tsdown` (`lib/` с `unbundle: true` и `lib/client.js`).
-2. `npm run prepare` — предрелизная сборка (`tsdown 1>&2`).
-3. `npm run typecheck` — проверка типов через `tsc --noEmit`.
-4. `npm test` — полный запуск 38 тестовых файлов (175 тестов) через `node --test`.
-5. `npm run pack:check` — проверка на отсутствие `*.tgz` в корне и соблюдение лимита размера файлов (<256 KiB).
-6. `npm run check` — комплексная проверка: `typecheck && test && build && pack:check`.
-7. `npm run release` — валидация и упаковка релизного артефакта в `dist/`.
-8. `npm run sync:models` — синхронизация статического каталога моделей с Ollama Cloud API.
-
-## Штатный deploy и runner
-- Единый скрипт: `deploy.sh`
-  - `bash deploy.sh check` — проверка и подготовка релиз-кандидата.
-  - `DSH_OLLAMA_APPROVED=yes bash deploy.sh install <version>` — установка в web-профиль.
-  - `bash deploy.sh verify [version]` — проверка работоспособности.
-
-## Дата и способ последней проверки
-- 11.11.2026: Прогон всех тестов (158/158 pass), `preflight.sh` (0 FAIL), проверка на стенде MiniPC и в production web-профиле.
+## Verified npm Scripts
+1. `npm run build` — build via `tsdown` (`lib/` with `unbundle: true` and `lib/client.js`).
+2. `npm run prepare` — pre-pack build (`tsdown 1>&2`).
+3. `npm run typecheck` — TypeScript check via `tsc --noEmit`.
+4. `npm test` — run all 38 test files (175 tests) via `node --import tsx --test`.
+5. `npm run pack:check` — verify no stray `*.tgz` in root and every packed file is under 256 KiB.
+6. `npm run check` — full gate: `typecheck && test && build && pack:check`.
+7. `npm run release` — run `check` and build `.tgz` tarball into `dist/`.
+8. `npm run sync:models` — synchronize static fallback catalog metadata.

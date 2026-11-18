@@ -102,7 +102,7 @@ export function OllamaCloudSettingsPage(props: {
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({})
   const [keyDraft, setKeyDraft] = useState('')
   const [accountKeys, setAccountKeys] = useState<Record<string, string>>({})
-  const [testModel, setTestModel] = useState('deepseek-ai/deepseek-v4.1-flash')
+  const [testModel, setTestModel] = useState('google/gemma-4-31b-it')
   const [testing, setTesting] = useState(false)
   const [testResult, setTestResult] = useState<TestResult | null>(null)
   const [service, setService] = useState<ServiceStatus | null>(null)
@@ -236,6 +236,9 @@ export function OllamaCloudSettingsPage(props: {
     || model.id.toLowerCase().includes(search.trim().toLowerCase()))
   const groups = groupModels(filtered, t('contextGroup'))
   const modelIds = state.models.map((model) => model.id)
+  const selectedTestModel = state.models.some((m) => m.id === testModel)
+    ? testModel
+    : (state.models[0]?.id ?? testModel)
 
   const moveModel = (from: string, to: string): void => {
     if (from === to) return
@@ -344,7 +347,7 @@ export function OllamaCloudSettingsPage(props: {
         <div className="ocl-row">
           <select
             className="ocl-select"
-            value={testModel}
+            value={selectedTestModel}
             aria-label={t('model')}
             onChange={(event) => setTestModel(event.target.value)}
           >
@@ -359,12 +362,12 @@ export function OllamaCloudSettingsPage(props: {
             onClick={() => {
               setTesting(true)
               setTestResult(null)
-              void testConnection(testModel)
+              void testConnection(selectedTestModel)
                 .then(setTestResult)
                 .catch((caught: unknown) => {
                   setTestResult({
                     ok: false,
-                    model: testModel,
+                    model: selectedTestModel,
                     provider: 'nvidia-nim',
                     latencyMs: 0,
                     error: caught instanceof Error ? caught.message : t('failed'),

@@ -51,31 +51,6 @@ export const GENERATED_MODELS: Record<string, NvidiaCloudModelMeta> = {
       "cacheRead": 0
     }
   },
-  "deepseek-ai/deepseek-v4.1-flash": {
-    "id": "deepseek-ai/deepseek-v4.1-flash",
-    "name": "deepseek-ai/deepseek-v4.1-flash",
-    "transport": "openai-chat",
-    "contextWindow": 1048576,
-    "maxTokens": 16384,
-    "input": [
-      "text",
-      "image"
-    ],
-    "reasoning": [
-      "low",
-      "medium",
-      "high"
-    ],
-    "reasoningToggle": true,
-    "tools": true,
-    "free": true,
-    "available": true,
-    "cost": {
-      "input": 0,
-      "output": 0,
-      "cacheRead": 0
-    }
-  },
   "google/gemma-3-12b-it": {
     "id": "google/gemma-3-12b-it",
     "name": "google/gemma-3-12b-it",

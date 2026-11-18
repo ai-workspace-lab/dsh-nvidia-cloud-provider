@@ -1,35 +1,31 @@
 # AGENTS.md
 
-Этот файл дополняет корневой `/mnt/external/Project/DEV/AGENTS.md` и
-содержит правила и факты, специфичные для плагина `dsh-ollama-cloud-provider`.
+This file contains rules and facts specific to the `dsh-nvidia-cloud-provider` plugin.
 
 ## Product / Purpose
 
-- **Проект**: `dsh-ollama-cloud-provider`
-- **Пакет**: `@goodandready/dsh-ollama-cloud-provider`
-- **DEV**: `/mnt/external/Project/DEV/dhsplugins/dsh-ollama-cloud-provider`
-- **Назначение**: LLM-провайдер для DeepSeek Harness, реализующий интеграцию с Ollama Cloud API (native и OpenAI-compatible transports, catalog, usage, analytics, multi-key rotation).
-- **Основные пользователи**: Пользователи DeepSeek Harness (Web и Desktop).
-- **Текущий статус**: active
-- **Статус проверен**: 11.11.2026, полный прогон тестового набора 158/158 тестов, preflight PASS, работа в production web и desktop профилях.
+- **Project**: `dsh-nvidia-cloud-provider`
+- **Package**: `@ai-workspace-lab/dsh-nvidia-cloud-provider`
+- **Repository**: `https://github.com/ai-workspace-lab/dsh-nvidia-cloud-provider`
+- **Purpose**: LLM provider plugin for DeepSeek Harness integrating NVIDIA NIM (`build.nvidia.com` / `integrate.api.nvidia.com/v1`) with OpenAI-compatible streaming, dynamic model catalog discovery, multi-key rotation, cooldowns, and request analytics.
+- **Target Users**: DeepSeek Harness users (Web and Desktop).
+- **Status**: active
 
-## Package Policy (DSH-плагин)
-- Все плагины проектируются публичными с первого коммита под scope `@goodandready/`.
-- Имя пакета: `@goodandready/dsh-ollama-cloud-provider`.
-- Публикация в GitHub/npm выполняется только после явного согласования владельца.
-- Релизные `.tgz` никогда не хранятся в корне исходников — только `dist/` или `/tmp`.
+## Package Policy (DSH Plugin)
+- Public plugin under `@ai-workspace-lab/dsh-nvidia-cloud-provider` with strict namespace isolation (`/dsh-nvidia/*`, `llm-nvidia-nim`, `nvidia-nim`, `storages/dsh-nvidia`) to coexist cleanly alongside `@goodandready/dsh-ollama-cloud-provider`.
+- Host packages `@deepseek-ai/*` are declared strictly in `peerDependencies`.
+- Release `.tgz` artifacts are never committed or left in source root — only generated in `dist/` or `/tmp`.
 
 ## Project Index (`index.md`)
-- `index.md` создан и поддерживается в актуальном состоянии.
-- Навигация, команды build/test/release и архитектура описаны в `index.md`.
+- Architecture, build/test/release commands, and entry points are documented in `index.md`.
 
 ## Essential Files
-- `docs/design/DESIGN.md` — обязательный дизайн-контракт пользовательского интерфейса и контрактов.
-- `docs/deployment/DEPLOYMENT.md` — инструкции и правила сборки и деплоя.
-- `deploy.sh` — штатный runner проверки и установки.
-- `scripts/pack-check.mjs` — автоматический страж размера пакета и отсутствия `*.tgz` в корне.
+- `docs/design/DESIGN.md` — UI and contract design reference.
+- `docs/deployment/DEPLOYMENT.md` — build and deployment rules.
+- `deploy.sh` — standard verification and install runner.
+- `scripts/pack-check.mjs` — automatic guard for file size limits (<256 KiB) and stray `.tgz` files.
 
-## Правила кодовой базы
-- Никаких пустых `.catch(() => {})`: использовать `bestEffortFailed(label, err)` с логированием.
-- Сборка серверной библиотеки выполняется с `unbundle: true` для сохранения модульности доменов.
-- Защита write-маршрутов требует обязательной проверки same-origin и loopback-сокета.
+## Codebase Rules
+- No empty `.catch(() => {})`: use `bestEffortFailed(label, err)` with logging.
+- Server library is built with `unbundle: true` to preserve domain modularity.
+- Write routes require same-origin verification and loopback socket checks.
